@@ -1,0 +1,141 @@
+"====================Vim config file(.vimrc)===================
+"Authored by Fity(imfity@gmail.com)
+"
+"====================for vundle======================
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+if has("autocmd")
+    autocmd BufReadPost * if line("'\"") && line("'\"") <= line("$") | exe "normal `\"" | endif 
+endif
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
+
+"--------------------my own vundles--------------------
+"Plugin 'nvie/vim-flake8', {'rtp': 'ftplugin'}
+"Bundle 'Valloric/YouCompleteMe'
+Plugin 'tpope/vim-surround'
+Plugin 'godlygeek/tabular'
+Plugin 'plasticboy/vim-markdown'
+Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'bling/vim-airline'
+"--------------------my own vundles end--------------------
+
+" The following are examples of different formats supported.
+" Keep Plugin commands between vundle#begin/end.
+" plugin on GitHub repo
+"Plugin 'tpope/vim-fugitive'
+" plugin from http://vim-scripts.org/vim/scripts.html
+"Plugin 'L9'
+" Git plugin not hosted on GitHub
+"Plugin 'git://git.wincent.com/command-t.git'
+" git repos on your local machine (i.e. when working on your own plugin)
+"Plugin 'file:///home/gmarik/path/to/plugin'
+" The sparkup vim script is in a subdirectory of this repo called vim.
+" Pass the path to set the runtimepath properly.
+"Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
+" Avoid a name conflict with L9
+"Plugin 'user/L9', {'name': 'newL9'}
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+"====================Basic config====================
+filetype plugin indent on    " required
+" To ignore plugin indent changes, instead use:
+"filetype plugin on
+"
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
+syntax enable
+set nobackup
+set noswapfile
+set history=2000
+
+set encoding=utf-8
+set fileencoding=utf-8
+set number
+set list
+set hidden
+
+set title
+" set spell
+nnoremap <space> viw
+
+" search related
+set hlsearch
+set incsearch
+set smartcase
+
+" colorscheme
+set background=dark
+colorscheme molokai
+set showcmd
+set showmatch
+runtime macros/matchit.vim
+
+set expandtab
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set smarttab
+
+" highlight the specific column
+set colorcolumn=80,120
+set cursorcolumn
+set cursorline
+
+" command line complete
+set wildmenu
+set wildmode=full
+
+" code fold using indent(available: manual, indent, expr, syntax, diff,
+" marker)
+set foldmethod=syntax
+set foldlevel=5
+" ignore number format(0x9 will not be treat as hex, nor do the 07 as octal
+"set nrformats=
+"set pastetoggle=<f5>
+" used for indent_guide
+let g:indent_guides_guide_size=1
+
+" status line / power line
+set laststatus=2
+"====================Basic config end====================
+
+"====================key/expr maps for convenient edit====================
+cnoremap <C-p> <Up>
+cnoremap <C-n> <Down>
+cnoremap <expr> %% getcmdtype( ) == ':' ? expand('%:h').'/' : '%%'
+"====================key/expr maps end====================
+
+"====================note config====================
+map <Leader>p :!open -a /Applications/Google\ Chrome.app/ "%:p" <CR>
+let vim_markdown_initial_foldlevel=99
+"====================note config end====================
+
+"====================Coding config====================
+set autoindent
+set smartindent
+filetype on
+filetype plugin on
+"filetype plugin indent on
+filetype indent on
+" no expandtab when editting makefile
+autocmd FileType make set noexpandtab
+
+" auto complement
+set infercase
+"====================Coding config end====================

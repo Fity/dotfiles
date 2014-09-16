@@ -6,26 +6,32 @@ set nocompatible              " be iMproved, required
 filetype off                  " required
 
 if has("autocmd")
-    autocmd BufReadPost * if line("'\"") && line("'\"") <= line("$") | exe "normal `\"" | endif 
+    autocmd BufReadPost * if line("'\"") && line("'\"") <= line("$") | exe "normal `\"" | endif
 endif
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
 
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
 
 "--------------------my own vundles--------------------
 "Plugin 'nvie/vim-flake8', {'rtp': 'ftplugin'}
-"Bundle 'Valloric/YouCompleteMe'
+Bundle 'Valloric/YouCompleteMe'
+Bundle "davidhalter/jedi"
+Bundle "scrooloose/syntastic"
+Bundle 'ntpeters/vim-better-whitespace'
+Bundle 'kien/rainbow_parentheses.vim'
+Bundle 'tomasr/molokai'
+
 Plugin 'tpope/vim-surround'
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
 Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'bling/vim-airline'
+Plugin 'Lokaltog/vim-easymotion'
+Plugin 'hdima/python-syntax'
 "--------------------my own vundles end--------------------
 
 " The following are examples of different formats supported.
@@ -44,9 +50,7 @@ Plugin 'bling/vim-airline'
 " Avoid a name conflict with L9
 "Plugin 'user/L9', {'name': 'newL9'}
 
-" All of your Plugins must be added before the following line
 call vundle#end()            " required
-"====================Basic config====================
 filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
 "filetype plugin on
@@ -58,11 +62,15 @@ filetype plugin indent on    " required
 " :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
 "
 " see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
+"====================Basic config====================
 syntax enable
 set nobackup
 set noswapfile
 set history=2000
+set backspace=2
+set modeline
+
+"set iskeyword=@,48-57,192-255
 
 set encoding=utf-8
 set fileencoding=utf-8
@@ -82,6 +90,7 @@ set smartcase
 " colorscheme
 set background=dark
 colorscheme molokai
+let g:molokai_original = 1
 set showcmd
 set showmatch
 runtime macros/matchit.vim
@@ -113,16 +122,37 @@ let g:indent_guides_guide_size=1
 
 " status line / power line
 set laststatus=2
+
+if $VIM_CRONTAB == "true"
+    set nobackup
+    set nowritebackup
+endif
 "====================Basic config end====================
 
 "====================key/expr maps for convenient edit====================
 cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
 cnoremap <expr> %% getcmdtype( ) == ':' ? expand('%:h').'/' : '%%'
+
+"--------------------key map for VIM-easymotion--------------------
+map  / <Plug>(easymotion-sn)
+omap / <Plug>(easymotion-tn)
+map  n <Plug>(easymotion-next)
+map  N <Plug>(easymotion-prev)
+
+" line motion
+map <Leader>l <Plug>(easymotion-lineforward)
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
+map <Leader>h <Plug>(easymotion-linebackward)
+let g:EasyMotion_startofline = 0
+
+let g:EasyMotion_smartcase = 1
+"--------------------key map for VIM-easymotion end--------------------
 "====================key/expr maps end====================
 
 "====================note config====================
-map <Leader>p :!open -a /Applications/Google\ Chrome.app/ "%:p" <CR>
+autocmd FileType mkd map <Leader>p :!open -a /Applications/Google\ Chrome.app/ "%:p" <CR>
 let vim_markdown_initial_foldlevel=99
 "====================note config end====================
 
@@ -138,4 +168,54 @@ autocmd FileType make set noexpandtab
 
 " auto complement
 set infercase
+
+" Better Rainbow Parentheses configurations
+let g:rbpt_colorpairs = [
+    \ ['brown',       'RoyalBlue3'],
+    \ ['Darkblue',    'SeaGreen3'],
+    \ ['darkgray',    'DarkOrchid3'],
+    \ ['darkgreen',   'firebrick3'],
+    \ ['darkcyan',    'RoyalBlue3'],
+    \ ['darkred',     'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['brown',       'firebrick3'],
+    \ ['gray',        'RoyalBlue3'],
+    \ ['black',       'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['Darkblue',    'firebrick3'],
+    \ ['darkgreen',   'RoyalBlue3'],
+    \ ['darkcyan',    'SeaGreen3'],
+    \ ['darkred',     'DarkOrchid3'],
+    \ ['red',         'firebrick3'],
+    \ ]
+let g:rbpt_max = 16
+let g:rbpt_loadcmd_toggle = 0
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+
+" YouCompleteMe configurations
+let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
+let g:ycm_key_invoke_completion = ''
+let g:ycm_complete_in_comments = 1
+let g:ycm_collect_identifiers_from_comments_and_strings = 1
+let g:ycm_seed_identifiers_with_syntax = 1
+let g:ycm_autoclose_preview_window_after_completion = 1
+"let g:ycm_autoclose_preview_window_after_insertion = 1
+"
+" syntastic settings
+"let g:syntastic_ignore_files=[".*\.py$"]
+let g:syntastic_python_checkers=['pep8']
+"let g:syntastic_python_checker_args='--max-line-length=120'
+let g:syntastic_python_pep8_post_args='--max-line-length=120'
+
+" vim better whitespace settings
+let g:better_whitespace_filetypes_blacklist=['mkd', 'tex']
+autocmd FileType * :ToggleStripWhitespaceOnSave
+
+"--------------------Python configuration--------------------
+let python_highlight_all = 1
+autocmd FileType python nmap <F5> :!python %<CR>
+"--------------------Python configuration end--------------------
 "====================Coding config end====================

@@ -32,6 +32,7 @@ Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'bling/vim-airline'
 Plugin 'Lokaltog/vim-easymotion'
 Plugin 'hdima/python-syntax'
+Bundle 'tmhedberg/SimpylFold'
 "--------------------my own vundles end--------------------
 
 " The following are examples of different formats supported.
@@ -113,7 +114,7 @@ set wildmode=full
 " code fold using indent(available: manual, indent, expr, syntax, diff,
 " marker)
 set foldmethod=syntax
-set foldlevel=5
+set foldlevel=3
 " ignore number format(0x9 will not be treat as hex, nor do the 07 as octal
 "set nrformats=
 "set pastetoggle=<f5>
@@ -205,9 +206,10 @@ let g:ycm_autoclose_preview_window_after_completion = 1
 "let g:ycm_autoclose_preview_window_after_insertion = 1
 "
 " syntastic settings
-"let g:syntastic_ignore_files=[".*\.py$"]
+let g:syntastic_ignore_files=[".*\.tex$"]
 let g:syntastic_python_checkers=['pep8']
 "let g:syntastic_python_checker_args='--max-line-length=120'
+" let g:syntastic_python_pep8_post_args='--max-line-length=120 --ignore-errors=W391'
 let g:syntastic_python_pep8_post_args='--max-line-length=120'
 
 " vim better whitespace settings
@@ -216,6 +218,7 @@ autocmd FileType * :ToggleStripWhitespaceOnSave
 
 "--------------------Python configuration--------------------
 let python_highlight_all = 1
+let python_folding = 1
 autocmd FileType python nmap <F5> :!python %<CR>
 "--------------------Python configuration end--------------------
 "====================Coding config end====================

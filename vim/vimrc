@@ -19,20 +19,25 @@ Plugin 'gmarik/Vundle.vim'
 "--------------------my own vundles--------------------
 "Plugin 'nvie/vim-flake8', {'rtp': 'ftplugin'}
 Bundle 'Valloric/YouCompleteMe'
-Bundle "davidhalter/jedi"
-Bundle "scrooloose/syntastic"
+Bundle 'davidhalter/jedi'
+Bundle 'scrooloose/syntastic'
 Bundle 'ntpeters/vim-better-whitespace'
 Bundle 'kien/rainbow_parentheses.vim'
 Bundle 'tomasr/molokai'
+Bundle 'hynek/vim-python-pep8-indent'
 
+Plugin 'scrooloose/nerdcommenter'
 Plugin 'tpope/vim-surround'
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
 Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'bling/vim-airline'
+Plugin 'airblade/vim-gitgutter'
 Plugin 'Lokaltog/vim-easymotion'
-Plugin 'hdima/python-syntax'
-Bundle 'tmhedberg/SimpylFold'
+" Plugin 'hdima/python-syntax'
+" Bundle 'tmhedberg/SimpylFold'
+Bundle 'scrooloose/nerdtree'
+Bundle 'jistr/vim-nerdtree-tabs'
 "--------------------my own vundles end--------------------
 
 " The following are examples of different formats supported.
@@ -64,10 +69,15 @@ filetype plugin indent on    " required
 "
 " see :h vundle for more details or wiki for FAQ
 "====================Basic config====================
+if $TERM == "xterm-256color" || $TERM == "screen-256color" || $COLORTERM == "gnome-terminal"
+  set t_Co=256
+endif
 syntax enable
 set nobackup
 set noswapfile
-set history=2000
+set history=1024
+" auto read file when the file is changed outside vim
+set autoread
 set backspace=2
 set modeline
 
@@ -84,9 +94,10 @@ set title
 nnoremap <space> viw
 
 " search related
-set hlsearch
 set incsearch
+set ignorecase
 set smartcase
+set hlsearch
 
 " colorscheme
 set background=dark
@@ -96,6 +107,8 @@ set showcmd
 set showmatch
 runtime macros/matchit.vim
 
+" set textwidth=79
+
 set expandtab
 set tabstop=4
 set shiftwidth=4
@@ -103,14 +116,18 @@ set softtabstop=4
 set smarttab
 
 " highlight the specific column
-set colorcolumn=80,120
+set colorcolumn=80
 set cursorcolumn
 set cursorline
 
 " command line complete
 set wildmenu
 set wildmode=full
+" Ignore compiled files
+set wildignore=*.o,*~,*.pyc,.git\*,.hg\*,.svn\*
 
+" Height of the command bar
+" set cmdheight=2
 " code fold using indent(available: manual, indent, expr, syntax, diff,
 " marker)
 set foldmethod=syntax
@@ -128,6 +145,19 @@ if $VIM_CRONTAB == "true"
     set nobackup
     set nowritebackup
 endif
+
+"vim command line config
+cnoremap <C-a>  <Home>
+cnoremap <C-b>  <Left>
+cnoremap <C-f>  <Right>
+cnoremap <C-d>  <Delete>
+cnoremap <M-b>  <S-Left>
+cnoremap <M-f>  <S-Right>
+cnoremap <M-d>  <S-right><Delete>
+cnoremap <Esc>b <S-Left>
+cnoremap <Esc>f <S-Right>
+cnoremap <Esc>d <S-right><Delete>
+cnoremap <C-g>  <C-c>
 "====================Basic config end====================
 
 "====================key/expr maps for convenient edit====================
@@ -162,7 +192,7 @@ set autoindent
 set smartindent
 filetype on
 filetype plugin on
-"filetype plugin indent on
+filetype plugin indent on
 filetype indent on
 " no expandtab when editting makefile
 autocmd FileType make set noexpandtab
@@ -210,15 +240,22 @@ let g:syntastic_ignore_files=[".*\.tex$"]
 let g:syntastic_python_checkers=['pep8']
 "let g:syntastic_python_checker_args='--max-line-length=120'
 " let g:syntastic_python_pep8_post_args='--max-line-length=120 --ignore-errors=W391'
-let g:syntastic_python_pep8_post_args='--max-line-length=120'
+" let g:syntastic_python_pep8_post_args='--max-line-length=79'
 
 " vim better whitespace settings
 let g:better_whitespace_filetypes_blacklist=['mkd', 'tex']
-autocmd FileType * :ToggleStripWhitespaceOnSave
+" autocmd FileType python :ToggleStripWhitespaceOnSave
+autocmd BufWritePre <buffer> StripWhitespace
 
 "--------------------Python configuration--------------------
 let python_highlight_all = 1
 let python_folding = 1
 autocmd FileType python nmap <F5> :!python %<CR>
 "--------------------Python configuration end--------------------
+let g:NERDSpaceDelims = 2
+nmap <Leader>e :NERDTreeToggle<CR>
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") &&b:NERDTreeType == "primary") | q | endif
+" open netdtree by default
+" let g:nerdtree_tabs_open_on_console_startup=1
+let g:gitgutter_max_signs = 1024 " default 500
 "====================Coding config end====================

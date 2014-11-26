@@ -1,6 +1,7 @@
 "====================Vim config file(.vimrc)===================
 "Authored by Fity(imfity@gmail.com)
 "
+set shell=/bin/zsh
 "====================for vundle======================
 set nocompatible              " be iMproved, required
 filetype off                  " required

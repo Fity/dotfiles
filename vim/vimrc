@@ -31,7 +31,7 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'tpope/vim-surround'
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
-Plugin 'nathanaelkane/vim-indent-guides'
+" Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'bling/vim-airline'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'Lokaltog/vim-easymotion'
@@ -39,6 +39,10 @@ Plugin 'Lokaltog/vim-easymotion'
 " Bundle 'tmhedberg/SimpylFold'
 Bundle 'scrooloose/nerdtree'
 Bundle 'jistr/vim-nerdtree-tabs'
+Bundle 'Yggdroot/indentLine'
+" for git
+Plugin 'tpope/vim-git'
+Plugin 'tpope/vim-fugitive'
 "--------------------my own vundles end--------------------
 
 " The following are examples of different formats supported.
@@ -247,6 +251,8 @@ let g:syntastic_python_checkers=['pep8']
 let g:better_whitespace_filetypes_blacklist=['mkd', 'tex']
 " autocmd FileType python :ToggleStripWhitespaceOnSave
 autocmd BufWritePre <buffer> StripWhitespace
+" set indent line
+let g:indentLine_char = '|'
 
 "--------------------Python configuration--------------------
 let python_highlight_all = 1

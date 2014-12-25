@@ -24,25 +24,29 @@ Bundle 'davidhalter/jedi'
 Bundle 'scrooloose/syntastic'
 Bundle 'ntpeters/vim-better-whitespace'
 Bundle 'kien/rainbow_parentheses.vim'
-Bundle 'tomasr/molokai'
 Bundle 'hynek/vim-python-pep8-indent'
 
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'tpope/vim-surround'
-Plugin 'godlygeek/tabular'
-Plugin 'plasticboy/vim-markdown'
+" Plugin 'godlygeek/tabular'
 " Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'bling/vim-airline'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'Lokaltog/vim-easymotion'
-" Plugin 'hdima/python-syntax'
 " Bundle 'tmhedberg/SimpylFold'
 Bundle 'scrooloose/nerdtree'
 Bundle 'jistr/vim-nerdtree-tabs'
 Bundle 'Yggdroot/indentLine'
+" need ctags to be installed(brew install ctags
+Bundle 'kien/ctrlp.vim'
+Bundle 'mileszs/ack.vim'
 " for git
 Plugin 'tpope/vim-git'
 Plugin 'tpope/vim-fugitive'
+" theme and syntax
+Plugin 'solarnz/thrift.vim'
+Plugin 'plasticboy/vim-markdown'
+Bundle 'tomasr/molokai'
 "--------------------my own vundles end--------------------
 
 " The following are examples of different formats supported.
@@ -102,7 +106,8 @@ nnoremap <space> viw
 set incsearch
 set ignorecase
 set smartcase
-set hlsearch
+" set hlsearch
+set nohlsearch
 
 " colorscheme
 set background=dark
@@ -150,7 +155,9 @@ if $VIM_CRONTAB == "true"
     set nobackup
     set nowritebackup
 endif
+"====================Basic config end====================
 
+"====================key/expr maps for convenient edit====================
 "vim command line config
 cnoremap <C-a>  <Home>
 cnoremap <C-b>  <Left>
@@ -163,12 +170,13 @@ cnoremap <Esc>b <S-Left>
 cnoremap <Esc>f <S-Right>
 cnoremap <Esc>d <S-right><Delete>
 cnoremap <C-g>  <C-c>
-"====================Basic config end====================
-
-"====================key/expr maps for convenient edit====================
 cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
 cnoremap <expr> %% getcmdtype( ) == ':' ? expand('%:h').'/' : '%%'
+
+nnoremap <S-H> gT
+nnoremap <S-L> gt
+nnoremap <Leader>t <C-W><S-T>
 
 "--------------------key map for VIM-easymotion--------------------
 map  / <Plug>(easymotion-sn)
@@ -249,10 +257,10 @@ let g:syntastic_python_checkers=['pep8']
 
 " vim better whitespace settings
 let g:better_whitespace_filetypes_blacklist=['mkd', 'tex']
-" autocmd FileType python :ToggleStripWhitespaceOnSave
 autocmd BufWritePre <buffer> StripWhitespace
 " set indent line
 let g:indentLine_char = '|'
+nnoremap <Leader>f :CtrlPBufTag<CR>
 
 "--------------------Python configuration--------------------
 let python_highlight_all = 1
@@ -260,6 +268,7 @@ let python_folding = 1
 autocmd FileType python nmap <F5> :!python %<CR>
 "--------------------Python configuration end--------------------
 let g:NERDSpaceDelims = 2
+let g:NERDTreeIgnore = ['\.pyc$']
 nmap <Leader>e :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") &&b:NERDTreeType == "primary") | q | endif
 " open netdtree by default

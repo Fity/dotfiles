@@ -36,17 +36,28 @@ Plugin 'Lokaltog/vim-easymotion'
 " Bundle 'tmhedberg/SimpylFold'
 Bundle 'scrooloose/nerdtree'
 Bundle 'jistr/vim-nerdtree-tabs'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
 Bundle 'Yggdroot/indentLine'
 " need ctags to be installed(brew install ctags
 Bundle 'kien/ctrlp.vim'
 Bundle 'mileszs/ack.vim'
+" Bundle 'terryma/vim-multiple-cursors'
+" Bundle 'SirVer/ultisnips'
+" Bundle 'sjl/gundo.vim'
+" Bundle 'mhinz/vim-startify'
 " for git
 Plugin 'tpope/vim-git'
 Plugin 'tpope/vim-fugitive'
+Plugin 'parkr/vim-jekyll'
 " theme and syntax
 Plugin 'solarnz/thrift.vim'
 Plugin 'plasticboy/vim-markdown'
 Bundle 'tomasr/molokai'
+Bundle 'altercation/vim-colors-solarized'
+" Bundle 'hdima/python-syntax'
+" extra tools
+Bundle 'vimwiki/vimwiki'
+Bundle 'wakatime/vim-wakatime'
 "--------------------my own vundles end--------------------
 
 " The following are examples of different formats supported.
@@ -81,6 +92,9 @@ filetype plugin indent on    " required
 if $TERM == "xterm-256color" || $TERM == "screen-256color" || $COLORTERM == "gnome-terminal"
   set t_Co=256
 endif
+" remove intro messages
+set shortmess=I
+
 syntax enable
 set nobackup
 set noswapfile
@@ -95,12 +109,12 @@ set modeline
 set encoding=utf-8
 set fileencoding=utf-8
 set number
-set list
+" set list
 set hidden
 
 set title
 " set spell
-nnoremap <space> viw
+nnoremap <space> gv
 
 " search related
 set incsearch
@@ -109,10 +123,12 @@ set smartcase
 " set hlsearch
 set nohlsearch
 
-" colorscheme
+" colorscheme, dark or light
 set background=dark
-colorscheme molokai
-let g:molokai_original = 1
+let g:solarized_termcolors=256
+colorscheme solarized
+" colorscheme molokai
+" let g:molokai_original = 1
 set showcmd
 set showmatch
 runtime macros/matchit.vim
@@ -127,8 +143,8 @@ set smarttab
 
 " highlight the specific column
 set colorcolumn=80
-set cursorcolumn
-set cursorline
+" set cursorline
+" set cursorcolumn
 
 " command line complete
 set wildmenu
@@ -151,6 +167,7 @@ let g:indent_guides_guide_size=1
 " status line / power line
 set laststatus=2
 
+" options when edit the crontab file
 if $VIM_CRONTAB == "true"
     set nobackup
     set nowritebackup
@@ -158,6 +175,11 @@ endif
 "====================Basic config end====================
 
 "====================key/expr maps for convenient edit====================
+let mapleader=','
+let maplocalleader = '\\'
+nnoremap <silent> <Leader>ve :e $MYVIMRC<CR>
+nnoremap <silent> <Leader>vs :source $MYVIMRC<CR>
+
 "vim command line config
 cnoremap <C-a>  <Home>
 cnoremap <C-b>  <Left>
@@ -176,7 +198,13 @@ cnoremap <expr> %% getcmdtype( ) == ':' ? expand('%:h').'/' : '%%'
 
 nnoremap <S-H> gT
 nnoremap <S-L> gt
+nnoremap <C-J> <C-W>j
+nnoremap <C-K> <C-W>k
+nnoremap <C-H> <C-W>h
+nnoremap <C-l> <C-W>l
 nnoremap <Leader>t <C-W><S-T>
+
+nnoremap ; :
 
 "--------------------key map for VIM-easymotion--------------------
 map  / <Plug>(easymotion-sn)
@@ -195,9 +223,21 @@ let g:EasyMotion_smartcase = 1
 "--------------------key map for VIM-easymotion end--------------------
 "====================key/expr maps end====================
 
+"====================Custom Commands=====================
+cnoremap w!! w !sudo tee % >/dev/null
+"========================================================
+
 "====================note config====================
-autocmd FileType mkd map <Leader>p :!open -a /Applications/Google\ Chrome.app/ "%:p" <CR>
+augroup markdown_preview
+    autocmd!
+    autocmd FileType mkd map <Leader>p :!open -a /Applications/Google\ Chrome.app/ "%:p" <CR>
+augroup end
 let vim_markdown_initial_foldlevel=99
+" vimwiki options
+let g:vimwiki_menu = ''
+" let g:vimwiki_list = [{'path': '~/vimwiki/wiki', 'path_html': '~/vimwiki/wiki/html', 'syntax': 'markdown', 'ext': '.md'}]
+" vim-jekyll configurations
+let g:jekyll_post_extension = '.md'
 "====================note config end====================
 
 "====================Coding config====================
@@ -208,7 +248,9 @@ filetype plugin on
 filetype plugin indent on
 filetype indent on
 " no expandtab when editting makefile
-autocmd FileType make set noexpandtab
+augroup make_group
+    autocmd FileType make set noexpandtab
+augroup end
 
 " auto complement
 set infercase
@@ -234,10 +276,11 @@ let g:rbpt_colorpairs = [
     \ ]
 let g:rbpt_max = 16
 let g:rbpt_loadcmd_toggle = 0
-au VimEnter * RainbowParenthesesToggle
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadBraces
+augroup rainbow_group
+    autocmd VimEnter * RainbowParenthesesToggle
+    autocmd Syntax * RainbowParenthesesLoadRound
+    autocmd Syntax * RainbowParenthesesLoadSquare
+augroup end
 
 " YouCompleteMe configurations
 let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
@@ -250,14 +293,12 @@ let g:ycm_autoclose_preview_window_after_completion = 1
 "
 " syntastic settings
 let g:syntastic_ignore_files=[".*\.tex$"]
-let g:syntastic_python_checkers=['pep8']
-"let g:syntastic_python_checker_args='--max-line-length=120'
-" let g:syntastic_python_pep8_post_args='--max-line-length=120 --ignore-errors=W391'
-" let g:syntastic_python_pep8_post_args='--max-line-length=79'
+let g:syntastic_python_checkers=['pyflakes']
 
 " vim better whitespace settings
 let g:better_whitespace_filetypes_blacklist=['mkd', 'tex']
-autocmd BufWritePre <buffer> StripWhitespace
+" autocmd BufWritePre <buffer> StripWhitespace
+autocmd FileType * autocmd BufWritePre <buffer> StripWhitespace
 " set indent line
 let g:indentLine_char = '|'
 nnoremap <Leader>f :CtrlPBufTag<CR>
@@ -267,11 +308,17 @@ let python_highlight_all = 1
 let python_folding = 1
 autocmd FileType python nmap <F5> :!python %<CR>
 "--------------------Python configuration end--------------------
+let NERDTreeMinimalUI = 1
+" default to 1, use +/- if set to 0
+let NERDTreeDirArrows = 1
+" show hidden files in nerdtree, use I to switch in nerdtree window
+" let NERDTreeShowHidden=1
+" nerdcommenter option, use 2 space between code and its comments
 let g:NERDSpaceDelims = 2
 let g:NERDTreeIgnore = ['\.pyc$']
-nmap <Leader>e :NERDTreeToggle<CR>
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") &&b:NERDTreeType == "primary") | q | endif
+nmap <Leader>e :NERDTreeTabsToggle<CR>
 " open netdtree by default
 " let g:nerdtree_tabs_open_on_console_startup=1
 let g:gitgutter_max_signs = 1024 " default 500
 "====================Coding config end====================
+" testing options

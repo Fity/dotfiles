@@ -1,247 +1,86 @@
 scriptencoding utf-8
 set shell=/bin/zsh
 " ==============================================================================
-" Fity's vimrc
+" Fity's vimrc, use vim-plug to mantain plugins
 " Blog: http://fity.info
 " Github: https://github.com/fity
 " ==============================================================================
 
-" ==============================for vundle======================================
-set nocompatible              " be iMproved, required
-filetype off                  " required
-
-if has("autocmd")
-    autocmd BufReadPost * if line("'\"") && line("'\"") <= line("$") | exe "normal `\"" | endif
-endif
-
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-
-" let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
-" ------------------------------my plugins--------------------------------------
-"Plugin 'nvie/vim-flake8', {'rtp': 'ftplugin'}
-" code auto completion and style check
-Bundle 'Valloric/YouCompleteMe'
-Bundle 'scrooloose/syntastic'
-
-" coding tools
-Bundle 'kien/ctrlp.vim'
-" Plugin 'tacahiroy/ctrlp-funky'
-Plugin 'Lokaltog/vim-easymotion'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'tpope/vim-fugitive'
-Bundle 'hynek/vim-python-pep8-indent'
-Bundle 'ntpeters/vim-better-whitespace'
-Bundle 'kien/rainbow_parentheses.vim'
-Bundle 'Yggdroot/indentLine'
-" Plugin 'jmcantrell/vim-virtualenv'
-"
-Plugin 'tpope/vim-surround'
-Plugin 'bling/vim-airline'
-Bundle 'scrooloose/nerdtree'
-Bundle 'jistr/vim-nerdtree-tabs'
-Plugin 'Xuyuanp/nerdtree-git-plugin'
-" Plugin 'tpope/vim-git' " only for vim below 7.2
-
-" theme and syntax
-Plugin 'solarnz/thrift.vim'
-Plugin 'plasticboy/vim-markdown'
-Bundle 'tomasr/molokai'
-Bundle 'altercation/vim-colors-solarized'
-
-" extra tools
-" Bundle 'vimwiki/vimwiki'
-Plugin 'parkr/vim-jekyll'
-Bundle 'wakatime/vim-wakatime'
-
-" " Plugin 'godlygeek/tabular'
-" " need ctags to be installed(brew install ctags
-" Bundle 'mileszs/ack.vim'
-" " Bundle 'terryma/vim-multiple-cursors'
-" " Bundle 'SirVer/ultisnips'
-" " Bundle 'sjl/gundo.vim'
-" " Bundle 'mhinz/vim-startify'
-" " Bundle 'hdima/python-syntax'
-" ------------------------------------------------------------------------------
-
-call vundle#end()            " required
-filetype plugin indent on    " required
-" ==============================================================================
-
-" ===============================key mappinng===================================
-let mapleader = ','
-
-nnoremap ; :
-vnoremap ; :
-
-nnoremap <space> gv
-" ==============================================================================
-
-if $TERM == "xterm-256color" || $TERM == "screen-256color" || $COLORTERM == "gnome-terminal"
-  set t_Co=256
-endif
-" remove intro messages
+" global settings
+set nocompatible
+set encoding=utf-8
+set fileencoding=utf-8
+" ignore introduction messages
 set shortmess=I
-
-syntax enable
 set nobackup
 set noswapfile
 set history=1024
-" auto read file when the file is changed outside vim
-set autoread
 set backspace=2
-set modeline
-set encoding=utf-8
-set fileencoding=utf-8
-set number
-" set list
-set hidden
 
-set title
-" set spell
-
-" search related
-set incsearch
-set ignorecase
-set smartcase
-" set hlsearch
-set nohlsearch
-
-" colorscheme, dark or light
-set background=dark
-let g:solarized_termcolors=256
-colorscheme solarized
-" colorscheme molokai
-" let g:molokai_original = 1
-set showcmd
-set showmatch
-runtime macros/matchit.vim
-
-" set textwidth=79
-
-set expandtab
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
-set smarttab
-
-" highlight the specific column
-set colorcolumn=80
-" set cursorline
-" set cursorcolumn
-
-" command line complete
-set wildmenu
-set wildmode=full
-" Ignore compiled files
-set wildignore=*.o,*~,*.pyc,.git\*,.hg\*,.svn\*
-
-" Height of the command bar
-" set cmdheight=2
-" code fold using indent(available: manual, indent, expr, syntax, diff,
-" marker)
-set foldmethod=syntax
-set foldlevel=3
-" ignore number format(0x9 will not be treat as hex, nor do the 07 as octal
-"set nrformats=
-"set pastetoggle=<f5>
-" used for indent_guide
-let g:indent_guides_guide_size=1
-
-" status line / power line
-set laststatus=2
-
-" options when edit the crontab file
-if $VIM_CRONTAB == "true"
-    set nobackup
-    set nowritebackup
-endif
-"====================Basic config end====================
-
-"====================key/expr maps for convenient edit====================
-let mapleader=','
-let maplocalleader = '\\'
+" global general key mappings
+let mapleader = ','
+let maplocalleader=','
+map ; :
+cnoremap w!! w !sudo tee % >/dev/null
+" shortcuts for maintaining vimrc
 nnoremap <silent> <Leader>ve :e $MYVIMRC<CR>
 nnoremap <silent> <Leader>vs :source $MYVIMRC<CR>
 
-"vim command line config
-cnoremap <C-a>  <Home>
-cnoremap <C-b>  <Left>
-cnoremap <C-f>  <Right>
-cnoremap <C-d>  <Delete>
-cnoremap <M-b>  <S-Left>
-cnoremap <M-f>  <S-Right>
-cnoremap <M-d>  <S-right><Delete>
-cnoremap <Esc>b <S-Left>
-cnoremap <Esc>f <S-Right>
-cnoremap <Esc>d <S-right><Delete>
-cnoremap <C-g>  <C-c>
-cnoremap <C-p> <Up>
-cnoremap <C-n> <Down>
-cnoremap <expr> %% getcmdtype( ) == ':' ? expand('%:h').'/' : '%%'
+" plug settings
+call plug#begin('~/.vim/bundle')
+" my plugins
+" theme and appearance
+Plug 'tomasr/molokai'
+Plug 'altercation/vim-colors-solarized'
+Plug 'bling/vim-airline'
+Plug 'airblade/vim-gitgutter'
+Plug 'Yggdroot/indentLine'
+let g:indent_guides_guide_size=1
+let g:indentLine_char = '|'
 
-nnoremap <S-H> gT
-nnoremap <S-L> gt
-nnoremap <C-J> <C-W>j
-nnoremap <C-K> <C-W>k
-nnoremap <C-H> <C-W>h
-nnoremap <C-l> <C-W>l
-nnoremap <Leader>t <C-W><S-T>
-
-nnoremap ; :
-
-"--------------------key map for VIM-easymotion--------------------
+" ============================================================
+" text editing related
+Plug 'Lokaltog/vim-easymotion'
 map  / <Plug>(easymotion-sn)
 omap / <Plug>(easymotion-tn)
 map  n <Plug>(easymotion-next)
 map  N <Plug>(easymotion-prev)
-
-" line motion
+" easymotion line motion
 map <Leader>l <Plug>(easymotion-lineforward)
 map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
 map <Leader>h <Plug>(easymotion-linebackward)
 let g:EasyMotion_startofline = 0
-
 let g:EasyMotion_smartcase = 1
-"--------------------key map for VIM-easymotion end--------------------
-"====================key/expr maps end====================
 
-"====================Custom Commands=====================
-cnoremap w!! w !sudo tee % >/dev/null
-"========================================================
+Plug 'tpope/vim-surround'
+Plug 'scrooloose/nerdtree'
+Plug 'jistr/vim-nerdtree-tabs'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+let NERDTreeMinimalUI = 1
+" default to 1, use +/- if set to 0
+let NERDTreeDirArrows = 1
+" show hidden files in nerdtree, use I to switch in nerdtree window
+" let NERDTreeShowHidden=1
+" nerdcommenter option, use 2 space between code and its comments
+let g:NERDSpaceDelims = 2
+let g:NERDTreeIgnore = ['\.pyc$']
+nmap <Leader>e :NERDTreeTabsToggle<CR>
+" open netdtree by default
+" let g:nerdtree_tabs_open_on_console_startup=1
+let g:gitgutter_max_signs = 1024 " default 500
 
-"====================note config====================
-augroup markdown_preview
-    autocmd!
-    autocmd FileType mkd map <Leader>p :!open -a /Applications/Google\ Chrome.app/ "%:p" <CR>
-augroup end
-let vim_markdown_initial_foldlevel=99
-" vimwiki options
-let g:vimwiki_menu = ''
-" let g:vimwiki_list = [{'path': '~/vimwiki/wiki', 'path_html': '~/vimwiki/wiki/html', 'syntax': 'markdown', 'ext': '.md'}]
-" vim-jekyll configurations
-let g:jekyll_post_extension = '.md'
-"====================note config end====================
+" ============================================================
+" general coding related
+Plug 'kien/ctrlp.vim'
+nnoremap <Leader>f :CtrlPBufTag<CR>
 
-"====================Coding config====================
-set autoindent
-set smartindent
-filetype on
-filetype plugin on
-filetype plugin indent on
-filetype indent on
-" no expandtab when editting makefile
-augroup make_group
-    autocmd FileType make set noexpandtab
-augroup end
-
-" auto complement
-set infercase
-
+Plug 'scrooloose/nerdcommenter'
+Plug 'ntpeters/vim-better-whitespace'
+" let g:better_whitespace_filetypes_blacklist=['mkd', 'tex']
+" autocmd BufWritePre <buffer> StripWhitespace
+autocmd FileType python autocmd BufWritePre <buffer> StripWhitespace
+Plug 'kien/rainbow_parentheses.vim'
 " Better Rainbow Parentheses configurations
 let g:rbpt_colorpairs = [
     \ ['brown',       'RoyalBlue3'],
@@ -269,45 +108,151 @@ augroup rainbow_group
     autocmd Syntax * RainbowParenthesesLoadSquare
 augroup end
 
-" YouCompleteMe configurations
+Plug 'tpope/vim-fugitive'
+Plug 'Valloric/YouCompleteMe'
 let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
 let g:ycm_key_invoke_completion = ''
 let g:ycm_complete_in_comments = 1
 let g:ycm_collect_identifiers_from_comments_and_strings = 1
 let g:ycm_seed_identifiers_with_syntax = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_goto_buffer_command = 'vertical-split'
 "let g:ycm_autoclose_preview_window_after_insertion = 1
-"
-" syntastic settings
+nnoremap <leader>g :YcmCompleter GoToDeclaration<CR>
+
+Plug 'scrooloose/syntastic'
 let g:syntastic_ignore_files=[".*\.tex$"]
 " let g:syntastic_python_checkers=['pyflakes']
 let g:syntastic_python_checkers=['flake8']
 
-" vim better whitespace settings
-" let g:better_whitespace_filetypes_blacklist=['mkd', 'tex']
-" autocmd BufWritePre <buffer> StripWhitespace
-autocmd FileType python autocmd BufWritePre <buffer> StripWhitespace
-" set indent line
-let g:indentLine_char = '|'
-nnoremap <Leader>f :CtrlPBufTag<CR>
+" ============================================================
+" specific coding related
+Plug 'hynek/vim-python-pep8-indent'
 
-"--------------------Python configuration--------------------
+" ============================================================
+" syntax files
+Plug 'solarnz/thrift.vim'
+Plug 'plasticboy/vim-markdown'
+let vim_markdown_initial_foldlevel=99
+
+" ============================================================
+" extra
+" Bundle 'vimwiki/vimwiki'
+" vimwiki options
+" let g:vimwiki_menu = ''
+" let g:vimwiki_list = [{'path': '~/vimwiki/wiki', 'path_html': '~/vimwiki/wiki/html', 'syntax': 'markdown', 'ext': '.md'}]
+Plug 'parkr/vim-jekyll'
+" let g:jekyll_post_extension = '.md'
+" vim-jekyll configurations
+Plug 'wakatime/vim-wakatime'
+" not used now
+" Plugin 'tacahiroy/ctrlp-funky'
+" " Bundle 'terryma/vim-multiple-cursors'
+" " Bundle 'SirVer/ultisnips'
+" " Bundle 'sjl/gundo.vim'
+" " Bundle 'mhinz/vim-startify'
+" " Plugin 'godlygeek/tabular'
+call plug#end()
+
+" theme setting
+set background=dark
+let g:solarized_termcolors=256
+colorscheme solarized
+" needed for vim-airline
+set laststatus=2
+" Height of the command bar
+" set cmdheight=2
+
+set wildmenu
+set wildmode=full
+" Ignore compiled files
+set wildignore=*.o,*~,*.pyc,.git\*,.hg\*,.svn\*
+" set textwidth=79
+set modeline
+set hidden
+set title
+" set spell
+set incsearch
+set ignorecase
+set smartcase
+" set hlsearch
+set nohlsearch
+set showcmd
+set showmatch
+runtime macros/matchit.vim
+
+" set list
+set number
+set expandtab
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set smarttab
+
+" highlight the max column limit
+set colorcolumn=80
+" set cursorline
+" set cursorcolumn
+
+set foldmethod=syntax
+set foldlevel=3
+" ignore number format(0x9 will not be treat as hex, nor do the 07 as octal
+"set nrformats=
+"set pastetoggle=<f5>
+
+"vim command line config
+cnoremap <C-a>  <Home>
+cnoremap <C-b>  <Left>
+cnoremap <C-f>  <Right>
+cnoremap <C-d>  <Delete>
+cnoremap <M-b>  <S-Left>
+cnoremap <M-f>  <S-Right>
+cnoremap <M-d>  <S-right><Delete>
+cnoremap <Esc>b <S-Left>
+cnoremap <Esc>f <S-Right>
+cnoremap <Esc>d <S-right><Delete>
+cnoremap <C-g>  <C-c>
+cnoremap <C-p> <Up>
+cnoremap <C-n> <Down>
+cnoremap <expr> %% getcmdtype( ) == ':' ? expand('%:h').'/' : '%%'
+
+" window and tab navigating shortcuts
+nnoremap <S-H> gT
+nnoremap <S-L> gt
+nnoremap <C-J> <C-W>j
+nnoremap <C-K> <C-W>k
+nnoremap <C-H> <C-W>h
+nnoremap <C-l> <C-W>l
+nnoremap <Leader>t <C-W><S-T>
+
+" coding prefered settings
+set autoindent
+set smartindent
+filetype on
+filetype plugin on
+filetype plugin indent on
+filetype indent on
+" auto complement related
+set infercase
+
+" python syntax file settings
 let python_highlight_all = 1
 let python_folding = 1
 autocmd FileType python nmap <F5> :!python %<CR>
-"--------------------Python configuration end--------------------
-let NERDTreeMinimalUI = 1
-" default to 1, use +/- if set to 0
-let NERDTreeDirArrows = 1
-" show hidden files in nerdtree, use I to switch in nerdtree window
-" let NERDTreeShowHidden=1
-" nerdcommenter option, use 2 space between code and its comments
-let g:NERDSpaceDelims = 2
-let g:NERDTreeIgnore = ['\.pyc$']
-nmap <Leader>e :NERDTreeTabsToggle<CR>
-" open netdtree by default
-" let g:nerdtree_tabs_open_on_console_startup=1
-let g:gitgutter_max_signs = 1024 " default 500
-"====================Coding config end====================
-nnoremap <leader>g :YcmCompleter GoToDeclaration<CR>
-let g:ycm_goto_buffer_command = 'vertical-split'
+
+" options when edit the crontab file
+if $VIM_CRONTAB == "true"
+    set nobackup
+    set nowritebackup
+endif
+
+" user defined autogroups
+augroup make_group
+    autocmd FileType make set noexpandtab
+augroup end
+
+augroup markdown_preview
+    autocmd!
+    autocmd FileType mkd map <Leader>p :!open -a /Applications/Google\ Chrome.app/ "%:p" <CR>
+augroup end
+

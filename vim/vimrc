@@ -1,8 +1,12 @@
-"====================Vim config file(.vimrc)===================
-"Authored by Fity(imfity@gmail.com)
-"
+scriptencoding utf-8
 set shell=/bin/zsh
-"====================for vundle======================
+" ==============================================================================
+" Fity's vimrc
+" Blog: http://fity.info
+" Github: https://github.com/fity
+" ==============================================================================
+
+" ==============================for vundle======================================
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
@@ -16,79 +20,66 @@ call vundle#begin()
 
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
-
-"--------------------my own vundles--------------------
+" ------------------------------my plugins--------------------------------------
 "Plugin 'nvie/vim-flake8', {'rtp': 'ftplugin'}
+" code auto completion and style check
 Bundle 'Valloric/YouCompleteMe'
-Bundle 'davidhalter/jedi'
 Bundle 'scrooloose/syntastic'
+
+" coding tools
+Bundle 'kien/ctrlp.vim'
+" Plugin 'tacahiroy/ctrlp-funky'
+Plugin 'Lokaltog/vim-easymotion'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'tpope/vim-fugitive'
+Bundle 'hynek/vim-python-pep8-indent'
 Bundle 'ntpeters/vim-better-whitespace'
 Bundle 'kien/rainbow_parentheses.vim'
-Bundle 'hynek/vim-python-pep8-indent'
-
-Plugin 'scrooloose/nerdcommenter'
+Bundle 'Yggdroot/indentLine'
+" Plugin 'jmcantrell/vim-virtualenv'
+"
 Plugin 'tpope/vim-surround'
-" Plugin 'godlygeek/tabular'
-" Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'bling/vim-airline'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'Lokaltog/vim-easymotion'
-" Bundle 'tmhedberg/SimpylFold'
 Bundle 'scrooloose/nerdtree'
 Bundle 'jistr/vim-nerdtree-tabs'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
-Bundle 'Yggdroot/indentLine'
-" need ctags to be installed(brew install ctags
-Bundle 'kien/ctrlp.vim'
-Bundle 'mileszs/ack.vim'
-" Bundle 'terryma/vim-multiple-cursors'
-" Bundle 'SirVer/ultisnips'
-" Bundle 'sjl/gundo.vim'
-" Bundle 'mhinz/vim-startify'
-" for git
-Plugin 'tpope/vim-git'
-Plugin 'tpope/vim-fugitive'
-Plugin 'parkr/vim-jekyll'
+" Plugin 'tpope/vim-git' " only for vim below 7.2
+
 " theme and syntax
 Plugin 'solarnz/thrift.vim'
 Plugin 'plasticboy/vim-markdown'
 Bundle 'tomasr/molokai'
 Bundle 'altercation/vim-colors-solarized'
-" Bundle 'hdima/python-syntax'
-" extra tools
-Bundle 'vimwiki/vimwiki'
-Bundle 'wakatime/vim-wakatime'
-"--------------------my own vundles end--------------------
 
-" The following are examples of different formats supported.
-" Keep Plugin commands between vundle#begin/end.
-" plugin on GitHub repo
-"Plugin 'tpope/vim-fugitive'
-" plugin from http://vim-scripts.org/vim/scripts.html
-"Plugin 'L9'
-" Git plugin not hosted on GitHub
-"Plugin 'git://git.wincent.com/command-t.git'
-" git repos on your local machine (i.e. when working on your own plugin)
-"Plugin 'file:///home/gmarik/path/to/plugin'
-" The sparkup vim script is in a subdirectory of this repo called vim.
-" Pass the path to set the runtimepath properly.
-"Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
-" Avoid a name conflict with L9
-"Plugin 'user/L9', {'name': 'newL9'}
+" extra tools
+" Bundle 'vimwiki/vimwiki'
+Plugin 'parkr/vim-jekyll'
+Bundle 'wakatime/vim-wakatime'
+
+" " Plugin 'godlygeek/tabular'
+" " need ctags to be installed(brew install ctags
+" Bundle 'mileszs/ack.vim'
+" " Bundle 'terryma/vim-multiple-cursors'
+" " Bundle 'SirVer/ultisnips'
+" " Bundle 'sjl/gundo.vim'
+" " Bundle 'mhinz/vim-startify'
+" " Bundle 'hdima/python-syntax'
+" ------------------------------------------------------------------------------
 
 call vundle#end()            " required
 filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-"====================Basic config====================
+" ==============================================================================
+
+" ===============================key mappinng===================================
+let mapleader = ','
+
+nnoremap ; :
+vnoremap ; :
+
+nnoremap <space> gv
+" ==============================================================================
+
 if $TERM == "xterm-256color" || $TERM == "screen-256color" || $COLORTERM == "gnome-terminal"
   set t_Co=256
 endif
@@ -103,9 +94,6 @@ set history=1024
 set autoread
 set backspace=2
 set modeline
-
-"set iskeyword=@,48-57,192-255
-
 set encoding=utf-8
 set fileencoding=utf-8
 set number
@@ -114,7 +102,6 @@ set hidden
 
 set title
 " set spell
-nnoremap <space> gv
 
 " search related
 set incsearch
@@ -293,12 +280,13 @@ let g:ycm_autoclose_preview_window_after_completion = 1
 "
 " syntastic settings
 let g:syntastic_ignore_files=[".*\.tex$"]
-let g:syntastic_python_checkers=['pyflakes']
+" let g:syntastic_python_checkers=['pyflakes']
+let g:syntastic_python_checkers=['flake8']
 
 " vim better whitespace settings
-let g:better_whitespace_filetypes_blacklist=['mkd', 'tex']
+" let g:better_whitespace_filetypes_blacklist=['mkd', 'tex']
 " autocmd BufWritePre <buffer> StripWhitespace
-autocmd FileType * autocmd BufWritePre <buffer> StripWhitespace
+autocmd FileType python autocmd BufWritePre <buffer> StripWhitespace
 " set indent line
 let g:indentLine_char = '|'
 nnoremap <Leader>f :CtrlPBufTag<CR>
@@ -321,4 +309,5 @@ nmap <Leader>e :NERDTreeTabsToggle<CR>
 " let g:nerdtree_tabs_open_on_console_startup=1
 let g:gitgutter_max_signs = 1024 " default 500
 "====================Coding config end====================
-" testing options
+nnoremap <leader>g :YcmCompleter GoToDeclaration<CR>
+let g:ycm_goto_buffer_command = 'vertical-split'

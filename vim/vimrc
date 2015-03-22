@@ -195,7 +195,7 @@ set colorcolumn=80
 " set cursorcolumn
 
 set foldmethod=syntax
-set foldlevel=3
+" set foldlevel=0
 " ignore number format(0x9 will not be treat as hex, nor do the 07 as octal
 "set nrformats=
 "set pastetoggle=<f5>
@@ -256,3 +256,7 @@ augroup markdown_preview
     autocmd FileType mkd map <Leader>p :!open -a /Applications/Google\ Chrome.app/ "%:p" <CR>
 augroup end
 
+autocmd BufReadPost *
+    \ if line("'\"")>0&&line("'\"")<=line("$") |
+    \   exe "normal g'\"" |
+    \ endif

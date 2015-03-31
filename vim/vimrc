@@ -16,14 +16,15 @@ set nobackup
 set noswapfile
 set history=1024
 set backspace=2
+set autoread
 
 " global general key mappings
 let mapleader = ','
-let maplocalleader=','
+let maplocalleader='\'
 map ; :
 cnoremap w!! w !sudo tee % >/dev/null
 " shortcuts for maintaining vimrc
-nnoremap <silent> <Leader>ve :e $MYVIMRC<CR>
+nnoremap <silent> <Leader>ve :tabedit $MYVIMRC<CR>
 nnoremap <silent> <Leader>vs :source $MYVIMRC<CR>
 
 " plug settings
@@ -31,8 +32,14 @@ call plug#begin('~/.vim/bundle')
 " my plugins
 " theme and appearance
 Plug 'tomasr/molokai'
+" gui only
+Plug 'mitsuhiko/fruity-vim-colorscheme'
+" a port from gui only to term compatible, not really nice
+" Plug 's0undt3ch/fruity-vim-colorscheme'
 Plug 'altercation/vim-colors-solarized'
 Plug 'bling/vim-airline'
+" needed for vim-airline
+set laststatus=2
 Plug 'airblade/vim-gitgutter'
 Plug 'Yggdroot/indentLine'
 let g:indent_guides_guide_size=1
@@ -125,14 +132,42 @@ let g:syntastic_ignore_files=[".*\.tex$"]
 " let g:syntastic_python_checkers=['pyflakes']
 let g:syntastic_python_checkers=['flake8']
 
+" engine
+Plug 'SirVer/ultisnips'
+" real snippets
+Plug 'honza/vim-snippets'
+
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsExpandTrigger="<leader>x"
+" let g:UltiSnipsJumpForwardTrigger="<leader>n"
+" let g:UltiSnipsJumpBackwardTrigger="<leader>p"
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit = 'vertical'
+
+
 " ============================================================
 " specific coding related
 Plug 'hynek/vim-python-pep8-indent'
+Plug 'fs111/pydoc.vim'
+let g:pydoc_open_cmd = 'tabnew'
+" function! MyPydoc()
+    " let current_word = expand("<cword>")
+    " echom current_word
+    " execute 'silent Pydoc' current_word
+" endfunction
+function! MyPydoc(query)
+    execute 'silent Pydoc' a:query
+endfunction
+nnoremap <localleader>d :call MyPydoc(expand("<cword>")) <CR>
+vnoremap <localleader>d :call MyPydoc(expand("<cword>")) <CR>
+
 
 " ============================================================
 " syntax files
+Plug 'mitsuhiko/vim-rst'
 Plug 'solarnz/thrift.vim'
 Plug 'plasticboy/vim-markdown'
+Plug 'mitsuhiko/vim-python-combined'
 let vim_markdown_initial_foldlevel=99
 
 " ============================================================
@@ -155,11 +190,27 @@ Plug 'wakatime/vim-wakatime'
 call plug#end()
 
 " theme setting
-set background=dark
+" set background=dark
 let g:solarized_termcolors=256
-colorscheme solarized
-" needed for vim-airline
-set laststatus=2
+if has("gui_running")
+    " remove buffer scrollbar
+    set guioptions-=r
+    " remove nerdtree scrollbar
+    set guioptions-=L
+endif
+if has("gui_running")
+    colorscheme fruity
+    if has("mac")
+        set guifont=Monaco:h13
+        set fuoptions=maxvert,maxhorz
+        " does not work properly on os x
+        " au GUIEnter * set fullscreen
+    else
+        set guifont=DejaVu\ Sans\ Mono\ 10
+    endif
+else
+    colorscheme solarized
+endif
 " Height of the command bar
 " set cmdheight=2
 
@@ -170,7 +221,10 @@ set wildignore=*.o,*~,*.pyc,.git\*,.hg\*,.svn\*
 " set textwidth=79
 set modeline
 set hidden
+" enable automatic title setting for terminals
 set title
+set titleold="Terminal"
+set titlestring=%F
 " set spell
 set incsearch
 set ignorecase
@@ -195,7 +249,7 @@ set colorcolumn=80
 " set cursorcolumn
 
 set foldmethod=syntax
-" set foldlevel=0
+set foldlevel=1
 " ignore number format(0x9 will not be treat as hex, nor do the 07 as octal
 "set nrformats=
 "set pastetoggle=<f5>

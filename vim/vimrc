@@ -1,5 +1,8 @@
 scriptencoding utf-8
 set shell=/bin/zsh
+" Move Backup Files to ~/.vim/sessions
+set backupdir=~/.vim/sessions
+set dir=~/.vim/sessions
 " ==============================================================================
 " Fity's vimrc, use vim-plug to mantain plugins
 " Blog: http://fity.info

@@ -193,9 +193,11 @@ Plug 'wakatime/vim-wakatime'
 call plug#end()
 
 " theme setting
-" set background=dark
+set background=dark
 let g:solarized_termcolors=256
 if has("gui_running")
+    " remove toolbar
+    set guioptions-=T
     " remove buffer scrollbar
     set guioptions-=r
     " remove nerdtree scrollbar
@@ -218,7 +220,7 @@ endif
 " set cmdheight=2
 
 set wildmenu
-set wildmode=full
+set wildmode=list:full
 " Ignore compiled files
 set wildignore=*.o,*~,*.pyc,.git\*,.hg\*,.svn\*
 " set textwidth=79
@@ -239,6 +241,17 @@ set showmatch
 runtime macros/matchit.vim
 
 " set list
+" toggle between number and relative number on ,l
+nnoremap <localleader>l :call ToggleRelativeAbsoluteNumber()<CR>
+function! ToggleRelativeAbsoluteNumber()
+  if &number
+    set relativenumber
+    set nonumber
+  else
+    set number
+    set norelativenumber
+  endif
+endfunction
 set number
 set expandtab
 set tabstop=4

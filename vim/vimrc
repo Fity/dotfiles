@@ -43,10 +43,24 @@ Plug 'altercation/vim-colors-solarized'
 Plug 'bling/vim-airline'
 " needed for vim-airline
 set laststatus=2
+let g:airline#extensions#tabline#enabled = 1
 Plug 'airblade/vim-gitgutter'
 Plug 'Yggdroot/indentLine'
 let g:indent_guides_guide_size=1
 let g:indentLine_char = '|'
+Plug 'junegunn/vim-easy-align'
+" Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
+vmap <Enter> <Plug>(EasyAlign)
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+" vmap <Leader>a <Plug>(EasyAlign)
+" nmap <Leader>a <Plug>(EasyAlign)
+if !exists('g:easy_align_delimiters')
+  let g:easy_align_delimiters = {}
+endif
+let g:easy_align_delimiters['#'] = { 'pattern': '#', 'ignore_groups': ['String'] }
+
+Plug 'mhinz/vim-startify'
 
 " ============================================================
 " text editing related
@@ -63,10 +77,18 @@ map <Leader>h <Plug>(easymotion-linebackward)
 let g:EasyMotion_startofline = 0
 let g:EasyMotion_smartcase = 1
 
+Plug 'mileszs/ack.vim'
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
+
 Plug 'tpope/vim-surround'
+Plug 'michaeljsmith/vim-indent-object'
 Plug 'scrooloose/nerdtree'
 Plug 'jistr/vim-nerdtree-tabs'
 Plug 'Xuyuanp/nerdtree-git-plugin'
+" close vim if the only window left open is NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 let NERDTreeMinimalUI = 1
 " default to 1, use +/- if set to 0
 let NERDTreeDirArrows = 1
@@ -74,16 +96,25 @@ let NERDTreeDirArrows = 1
 " let NERDTreeShowHidden=1
 " nerdcommenter option, use 2 space between code and its comments
 let g:NERDSpaceDelims = 2
-let g:NERDTreeIgnore = ['\.pyc$']
+let g:NERDTreeIgnore = ['\.pyc$', '\.o$', '\.exe$', '\.a$']
 nmap <Leader>e :NERDTreeTabsToggle<CR>
 " let g:nerdtree_tabs_open_on_console_startup=1
-" let g:nerdtree_tabs_open_on_gui_startup=0
+let g:nerdtree_tabs_open_on_gui_startup=0
 let g:gitgutter_max_signs = 1024 " default 500
+let g:NERDTreeWinSize=20
 
 " ============================================================
 " general coding related
 Plug 'kien/ctrlp.vim'
+Plug 'FelikZ/ctrlp-py-matcher'
+let g:ctrlp_custom_ignore = {
+    \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
+    \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz|pyc)$',
+    \ }
+let g:ctrlp_follow_symlinks=1
 nnoremap <Leader>f :CtrlPBufTag<CR>
+Plug 'majutsushi/tagbar'
+nnoremap <leader>t :TagbarToggle<CR>
 
 Plug 'scrooloose/nerdcommenter'
 Plug 'ntpeters/vim-better-whitespace'
@@ -126,9 +157,14 @@ let g:ycm_complete_in_comments = 1
 let g:ycm_collect_identifiers_from_comments_and_strings = 1
 let g:ycm_seed_identifiers_with_syntax = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_goto_buffer_command = 'vertical-split'
+let g:ycm_goto_buffer_command = 'new-tab' " use h g:ycm_goto_buffer_command for help
+" keep error log files
+let g:ycm_server_keep_logfiles = 1
+let g:ycm_server_log_level = 'debug'
 "let g:ycm_autoclose_preview_window_after_insertion = 1
 nnoremap <leader>g :YcmCompleter GoToDeclaration<CR>
+nnoremap <leader>G :YcmCompleter GoToDefinition<CR>
+" nnoremap <leader>g :YcmCompleter GoTo<CR>
 
 Plug 'scrooloose/syntastic'
 let g:syntastic_ignore_files=[".*\.tex$"]
@@ -164,32 +200,50 @@ endfunction
 nnoremap <localleader>d :call MyPydoc(expand("<cword>")) <CR>
 vnoremap <localleader>d :call MyPydoc(expand("<cword>")) <CR>
 
+" web frontend related
+Plug 'mattn/emmet-vim'
+" only enable emmet in normal mode
+" let g:user_emmet_mode='n'
+let g:user_emmet_install_global = 0
+autocmd FileType html,css EmmetInstall
+autocmd FileType html,css,js :set shiftwidth=2
+
 
 " ============================================================
 " syntax files
 Plug 'mitsuhiko/vim-rst'
 Plug 'solarnz/thrift.vim'
-Plug 'plasticboy/vim-markdown'
+Plug 'tpope/vim-markdown'
 Plug 'mitsuhiko/vim-python-combined'
+Plug 'mitsuhiko/vim-jinja'
+let g:htmljinja_disable_detection=1
+let g:htmljinja_disable_html_upgrade=1
 let vim_markdown_initial_foldlevel=99
 
 " ============================================================
 " extra
-" Bundle 'vimwiki/vimwiki'
+" Plug 'vimwiki/vimwiki'
 " vimwiki options
 " let g:vimwiki_menu = ''
 " let g:vimwiki_list = [{'path': '~/vimwiki/wiki', 'path_html': '~/vimwiki/wiki/html', 'syntax': 'markdown', 'ext': '.md'}]
+
 Plug 'parkr/vim-jekyll'
 " let g:jekyll_post_extension = '.md'
 " vim-jekyll configurations
 Plug 'wakatime/vim-wakatime'
 " not used now
 " Plugin 'tacahiroy/ctrlp-funky'
-" " Bundle 'terryma/vim-multiple-cursors'
-" " Bundle 'SirVer/ultisnips'
-" " Bundle 'sjl/gundo.vim'
-" " Bundle 'mhinz/vim-startify'
-" " Plugin 'godlygeek/tabular'
+Plug 'terryma/vim-multiple-cursors'
+" Bundle 'SirVer/ultisnips'
+" Bundle 'sjl/gundo.vim'
+" Bundle 'mhinz/vim-startify'
+" Plugin 'godlygeek/tabular'
+
+" fancy plugins, jsut for fun
+" Plug 'ehamberg/vim-cute-python'
+
+" local plugin
+" Plug '~/codepad/vim-todo'
 call plug#end()
 
 " theme setting
@@ -202,25 +256,40 @@ if has("gui_running")
     set guioptions-=r
     " remove nerdtree scrollbar
     set guioptions-=L
-endif
-if has("gui_running")
+
     colorscheme fruity
     if has("mac")
-        set guifont=Monaco:h13
+        set guifont=Monaco:h15
         set fuoptions=maxvert,maxhorz
         " does not work properly on os x
         " au GUIEnter * set fullscreen
     else
-        set guifont=DejaVu\ Sans\ Mono\ 10
+        set guifont=DejaVu\ Sans\ Mono\ 15
     endif
+
 else
     colorscheme solarized
 endif
+if has("gui_running")
+else
+endif
+" toggle between number and relative number on ,l
+set number
+nnoremap <localleader>l :call ToggleRelativeAbsoluteNumber()<CR>
+function! ToggleRelativeAbsoluteNumber()
+  if &number
+    set relativenumber
+    set nonumber
+  else
+    set number
+    set norelativenumber
+  endif
+endfunction
 " Height of the command bar
 " set cmdheight=2
 
 set wildmenu
-set wildmode=list:full
+" set wildmode=list:full
 " Ignore compiled files
 set wildignore=*.o,*~,*.pyc,.git\*,.hg\*,.svn\*
 " set textwidth=79
@@ -241,18 +310,6 @@ set showmatch
 runtime macros/matchit.vim
 
 " set list
-" toggle between number and relative number on ,l
-nnoremap <localleader>l :call ToggleRelativeAbsoluteNumber()<CR>
-function! ToggleRelativeAbsoluteNumber()
-  if &number
-    set relativenumber
-    set nonumber
-  else
-    set number
-    set norelativenumber
-  endif
-endfunction
-set number
 set expandtab
 set tabstop=4
 set shiftwidth=4
@@ -293,7 +350,7 @@ nnoremap <C-J> <C-W>j
 nnoremap <C-K> <C-W>k
 nnoremap <C-H> <C-W>h
 nnoremap <C-l> <C-W>l
-nnoremap <Leader>t <C-W><S-T>
+nnoremap <localleader>t <C-W><S-T>
 
 " coding prefered settings
 set autoindent
@@ -323,10 +380,21 @@ augroup end
 
 augroup markdown_preview
     autocmd!
-    autocmd FileType mkd map <Leader>p :!open -a /Applications/Google\ Chrome.app/ "%:p" <CR>
+    autocmd FileType markdown,mkd map <Leader>p :!open -a /Applications/Google\ Chrome.app/ "%:p" <CR>
 augroup end
 
 autocmd BufReadPost *
     \ if line("'\"")>0&&line("'\"")<=line("$") |
     \   exe "normal g'\"" |
     \ endif
+
+
+" persional helper
+
+" search the current(selected) word, add a prefix to avoid conflicts with
+" easymotion
+vnoremap <leader>/ y/<C-R>"<CR>
+nnoremap <leader>/ vey/<C-R>"<CR>
+
+" contact with system clipboard
+set clipboard=unnamed

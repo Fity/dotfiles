@@ -1,8 +1,5 @@
 scriptencoding utf-8
 set shell=/bin/zsh
-" Move Backup Files to ~/.vim/sessions
-set backupdir=~/.vim/sessions
-set dir=~/.vim/sessions
 " ==============================================================================
 " Fity's vimrc, use vim-plug to mantain plugins
 " Blog: http://fity.info
@@ -20,6 +17,9 @@ set noswapfile
 set history=1024
 set backspace=2
 set autoread
+" Move Backup Files to ~/.vim/sessions
+set backupdir=~/.vim/sessions
+set dir=~/.vim/sessions
 
 " global general key mappings
 let mapleader = ','
@@ -61,6 +61,11 @@ endif
 let g:easy_align_delimiters['#'] = { 'pattern': '#', 'ignore_groups': ['String'] }
 
 Plug 'mhinz/vim-startify'
+Plug 'tmhedberg/SimpylFold'
+autocmd BufWinEnter *.py setlocal foldexpr=SimpylFold(v:lnum) foldmethod=expr
+autocmd BufWinLeave *.py setlocal foldexpr< foldmethod<
+
+Plug 'kshenoy/vim-signature'
 
 " ============================================================
 " text editing related
@@ -150,7 +155,7 @@ augroup rainbow_group
 augroup end
 
 Plug 'tpope/vim-fugitive'
-Plug 'Valloric/YouCompleteMe'
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
 let g:ycm_key_invoke_completion = ''
 let g:ycm_complete_in_comments = 1
@@ -162,8 +167,10 @@ let g:ycm_goto_buffer_command = 'new-tab' " use h g:ycm_goto_buffer_command for 
 let g:ycm_server_keep_logfiles = 1
 let g:ycm_server_log_level = 'debug'
 "let g:ycm_autoclose_preview_window_after_insertion = 1
-nnoremap <leader>g :YcmCompleter GoToDeclaration<CR>
-nnoremap <leader>G :YcmCompleter GoToDefinition<CR>
+nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
+nnoremap <leader>G :YcmCompleter GoToDeclaration<CR>
+" nnoremap <leader>g :YcmCompleter GoToDeclaration<CR>
+" nnoremap <leader>G :YcmCompleter GoToDefinition<CR>
 " nnoremap <leader>g :YcmCompleter GoTo<CR>
 
 Plug 'scrooloose/syntastic'
@@ -213,12 +220,20 @@ autocmd FileType html,css,js :set shiftwidth=2
 " syntax files
 Plug 'mitsuhiko/vim-rst'
 Plug 'solarnz/thrift.vim'
-Plug 'tpope/vim-markdown'
+" Plug 'tpope/vim-markdown'
+Plug 'jtratner/vim-flavored-markdown'
+augroup markdown
+    au!
+    au BufNewFile,BufRead *.md,*.markdown setlocal filetype=ghmarkdown
+augroup END
 Plug 'mitsuhiko/vim-python-combined'
 Plug 'mitsuhiko/vim-jinja'
+Plug 'dag/vim-fish'
 let g:htmljinja_disable_detection=1
 let g:htmljinja_disable_html_upgrade=1
 let vim_markdown_initial_foldlevel=99
+
+Plug 'jmcantrell/vim-virtualenv'
 
 " ============================================================
 " extra
@@ -270,9 +285,6 @@ if has("gui_running")
 else
     colorscheme solarized
 endif
-if has("gui_running")
-else
-endif
 " toggle between number and relative number on ,l
 set number
 nnoremap <localleader>l :call ToggleRelativeAbsoluteNumber()<CR>
@@ -322,7 +334,7 @@ set colorcolumn=80
 " set cursorcolumn
 
 set foldmethod=syntax
-set foldlevel=1
+set foldlevel=99
 " ignore number format(0x9 will not be treat as hex, nor do the 07 as octal
 "set nrformats=
 "set pastetoggle=<f5>

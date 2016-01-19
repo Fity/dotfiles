@@ -2,8 +2,9 @@ scriptencoding utf-8
 set shell=/bin/zsh
 " ==============================================================================
 " Fity's vimrc, use vim-plug to mantain plugins
-" Blog: http://fity.info
+" Blog: http://fity.me
 " Github: https://github.com/fity
+" Mail: imfity@gmail.com
 " ==============================================================================
 
 " global settings
@@ -17,13 +18,18 @@ set noswapfile
 set history=1024
 set backspace=2
 set autoread
+" contact with system clipboard
+set clipboard=unnamed
+" set the working path to the path of the current file
+set autochdir
+
 " Move Backup Files to ~/.vim/sessions
 set backupdir=~/.vim/sessions
 set dir=~/.vim/sessions
 
 " global general key mappings
-let mapleader = ','
-let maplocalleader='\'
+let mapleader = ' '
+let maplocalleader=','
 map ; :
 cnoremap w!! w !sudo tee % >/dev/null
 " shortcuts for maintaining vimrc
@@ -45,31 +51,41 @@ Plug 'bling/vim-airline'
 set laststatus=2
 let g:airline#extensions#tabline#enabled = 1
 Plug 'airblade/vim-gitgutter'
+autocmd InsertEnter *.json setlocal concealcursor=
+autocmd InsertLeave *.json setlocal concealcursor=inc
 Plug 'Yggdroot/indentLine'
 let g:indent_guides_guide_size=1
-let g:indentLine_char = '|'
-Plug 'junegunn/vim-easy-align'
-" Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
-vmap <Enter> <Plug>(EasyAlign)
-" Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plug>(EasyAlign)
-" vmap <Leader>a <Plug>(EasyAlign)
-" nmap <Leader>a <Plug>(EasyAlign)
-if !exists('g:easy_align_delimiters')
-  let g:easy_align_delimiters = {}
-endif
-let g:easy_align_delimiters['#'] = { 'pattern': '#', 'ignore_groups': ['String'] }
+let g:indentLine_char = '¦'
 
-Plug 'mhinz/vim-startify'
+" Plug 'junegunn/vim-easy-align'
+" " Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
+" vmap <Enter> <Plug>(EasyAlign)
+" " Start interactive EasyAlign for a motion/text object (e.g. gaip)
+" nmap ga <Plug>(EasyAlign)
+" " vmap <Leader>a <Plug>(EasyAlign)
+" " nmap <Leader>a <Plug>(EasyAlign)
+" if !exists('g:easy_align_delimiters')
+  " let g:easy_align_delimiters = {}
+" endif
+" let g:easy_align_delimiters['#'] = { 'pattern': '#', 'ignore_groups': ['String'] }
+
+" Plug 'mhinz/vim-startify'
 Plug 'tmhedberg/SimpylFold'
 autocmd BufWinEnter *.py setlocal foldexpr=SimpylFold(v:lnum) foldmethod=expr
 autocmd BufWinLeave *.py setlocal foldexpr< foldmethod<
+" show doc string for folded code
+" let g:SimpylFold_docstring_preview=1
 
 Plug 'kshenoy/vim-signature'
 
 " ============================================================
 " text editing related
 Plug 'Lokaltog/vim-easymotion'
+if has("gui_running")
+    " fix serach in MacVIM "+gP
+    " for the same reason, use <c-\> to insert content in ctrlP
+    autocmd BufWinEnter * :EMCommandLineNoreMap \"\+gP <C-r>+
+endif
 map  / <Plug>(easymotion-sn)
 omap / <Plug>(easymotion-tn)
 map  n <Plug>(easymotion-next)
@@ -118,6 +134,7 @@ let g:ctrlp_custom_ignore = {
     \ }
 let g:ctrlp_follow_symlinks=1
 nnoremap <Leader>f :CtrlPBufTag<CR>
+" nnoremap <Leader>r :CtrlPTag<CR>
 Plug 'majutsushi/tagbar'
 nnoremap <leader>t :TagbarToggle<CR>
 
@@ -155,7 +172,7 @@ augroup rainbow_group
 augroup end
 
 Plug 'tpope/vim-fugitive'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer' }
 let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
 let g:ycm_key_invoke_completion = ''
 let g:ycm_complete_in_comments = 1
@@ -167,11 +184,8 @@ let g:ycm_goto_buffer_command = 'new-tab' " use h g:ycm_goto_buffer_command for 
 let g:ycm_server_keep_logfiles = 1
 let g:ycm_server_log_level = 'debug'
 "let g:ycm_autoclose_preview_window_after_insertion = 1
-nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
-nnoremap <leader>G :YcmCompleter GoToDeclaration<CR>
-" nnoremap <leader>g :YcmCompleter GoToDeclaration<CR>
-" nnoremap <leader>G :YcmCompleter GoToDefinition<CR>
-" nnoremap <leader>g :YcmCompleter GoTo<CR>
+" nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
+nnoremap <leader>g :YcmCompleter GoTo<CR>
 
 Plug 'scrooloose/syntastic'
 let g:syntastic_ignore_files=[".*\.tex$"]
@@ -195,7 +209,8 @@ let g:UltiSnipsEditSplit = 'vertical'
 " specific coding related
 Plug 'hynek/vim-python-pep8-indent'
 Plug 'fs111/pydoc.vim'
-let g:pydoc_open_cmd = 'tabnew'
+" let g:pydoc_open_cmd = 'tabnew'
+let g:pydoc_open_cmd = 'vsplit'
 " function! MyPydoc()
     " let current_word = expand("<cword>")
     " echom current_word
@@ -218,21 +233,28 @@ autocmd FileType html,css,js :set shiftwidth=2
 
 " ============================================================
 " syntax files
-Plug 'mitsuhiko/vim-rst'
+" Plug 'mitsuhiko/vim-rst'
 Plug 'solarnz/thrift.vim'
 " Plug 'tpope/vim-markdown'
 Plug 'jtratner/vim-flavored-markdown'
+let vim_markdown_initial_foldlevel=99
 augroup markdown
     au!
     au BufNewFile,BufRead *.md,*.markdown setlocal filetype=ghmarkdown
 augroup END
+" a better Python syntax file
 Plug 'mitsuhiko/vim-python-combined'
+" python syntax file settings
+let python_highlight_all = 1
+let python_folding = 1
+autocmd FileType python nmap <F5> :!python %<CR>
+
 Plug 'mitsuhiko/vim-jinja'
-Plug 'dag/vim-fish'
 let g:htmljinja_disable_detection=1
 let g:htmljinja_disable_html_upgrade=1
-let vim_markdown_initial_foldlevel=99
+Plug 'dag/vim-fish'
 
+" Python virtualenv support
 Plug 'jmcantrell/vim-virtualenv'
 
 " ============================================================
@@ -243,21 +265,18 @@ Plug 'jmcantrell/vim-virtualenv'
 " let g:vimwiki_list = [{'path': '~/vimwiki/wiki', 'path_html': '~/vimwiki/wiki/html', 'syntax': 'markdown', 'ext': '.md'}]
 
 Plug 'parkr/vim-jekyll'
-" let g:jekyll_post_extension = '.md'
+let g:jekyll_post_extension = '.md'
 " vim-jekyll configurations
+" Working time tracking tool, config is ~/.wakatime.cfg
 Plug 'wakatime/vim-wakatime'
 " not used now
 " Plugin 'tacahiroy/ctrlp-funky'
 Plug 'terryma/vim-multiple-cursors'
-" Bundle 'SirVer/ultisnips'
 " Bundle 'sjl/gundo.vim'
-" Bundle 'mhinz/vim-startify'
 " Plugin 'godlygeek/tabular'
 
-" fancy plugins, jsut for fun
-" Plug 'ehamberg/vim-cute-python'
-
 " local plugin
+" Manage TODOs in  the source code
 " Plug '~/codepad/vim-todo'
 call plug#end()
 
@@ -287,16 +306,16 @@ else
 endif
 " toggle between number and relative number on ,l
 set number
-nnoremap <localleader>l :call ToggleRelativeAbsoluteNumber()<CR>
-function! ToggleRelativeAbsoluteNumber()
-  if &number
-    set relativenumber
-    set nonumber
-  else
-    set number
-    set norelativenumber
-  endif
-endfunction
+" nnoremap <localleader>l :call ToggleRelativeAbsoluteNumber()<CR>
+" function! ToggleRelativeAbsoluteNumber()
+  " if &number
+    " set relativenumber
+    " set nonumber
+  " else
+    " set number
+    " set norelativenumber
+  " endif
+" endfunction
 " Height of the command bar
 " set cmdheight=2
 
@@ -330,7 +349,7 @@ set smarttab
 
 " highlight the max column limit
 set colorcolumn=80
-" set cursorline
+set cursorline
 " set cursorcolumn
 
 set foldmethod=syntax
@@ -374,11 +393,6 @@ filetype indent on
 " auto complement related
 set infercase
 
-" python syntax file settings
-let python_highlight_all = 1
-let python_folding = 1
-autocmd FileType python nmap <F5> :!python %<CR>
-
 " options when edit the crontab file
 if $VIM_CRONTAB == "true"
     set nobackup
@@ -395,18 +409,14 @@ augroup markdown_preview
     autocmd FileType markdown,mkd map <Leader>p :!open -a /Applications/Google\ Chrome.app/ "%:p" <CR>
 augroup end
 
+" What dose these lines do?
 autocmd BufReadPost *
     \ if line("'\"")>0&&line("'\"")<=line("$") |
     \   exe "normal g'\"" |
     \ endif
 
 
-" persional helper
-
-" search the current(selected) word, add a prefix to avoid conflicts with
-" easymotion
-vnoremap <leader>/ y/<C-R>"<CR>
-nnoremap <leader>/ vey/<C-R>"<CR>
-
-" contact with system clipboard
-set clipboard=unnamed
+" json formater
+" command! FormatJson :%!python -m json.tool
+" Format Json String with unicode support
+command! FormatJson :%!python -c "import json,sys,codecs; json.dump(json.load(codecs.getreader('utf8')(sys.stdin)), codecs.getwriter('utf8')(sys.stdout), sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False)"

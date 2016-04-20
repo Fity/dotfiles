@@ -11,6 +11,12 @@ set shell=/bin/zsh
 set nocompatible
 set encoding=utf-8
 set fileencoding=utf-8
+set ambiwidth=double
+set lbr
+set fo+=mb
+set fileformat=unix
+" set list
+" set listchars=tab:>-,trail:-
 " ignore introduction messages
 set shortmess=I
 set nobackup
@@ -28,8 +34,8 @@ set backupdir=~/.vim/sessions
 set dir=~/.vim/sessions
 
 " global general key mappings
-let mapleader = ' '
-let maplocalleader=','
+let mapleader = ','
+let maplocalleader='\'
 map ; :
 cnoremap w!! w !sudo tee % >/dev/null
 " shortcuts for maintaining vimrc
@@ -69,7 +75,7 @@ let g:indentLine_char = '¦'
 " endif
 " let g:easy_align_delimiters['#'] = { 'pattern': '#', 'ignore_groups': ['String'] }
 
-" Plug 'mhinz/vim-startify'
+Plug 'mhinz/vim-startify'
 Plug 'tmhedberg/SimpylFold'
 autocmd BufWinEnter *.py setlocal foldexpr=SimpylFold(v:lnum) foldmethod=expr
 autocmd BufWinLeave *.py setlocal foldexpr< foldmethod<
@@ -179,18 +185,22 @@ let g:ycm_complete_in_comments = 1
 let g:ycm_collect_identifiers_from_comments_and_strings = 1
 let g:ycm_seed_identifiers_with_syntax = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_goto_buffer_command = 'new-tab' " use h g:ycm_goto_buffer_command for help
+let g:ycm_goto_buffer_command = 'new-or-existing-tab' " use h g:ycm_goto_buffer_command for help
 " keep error log files
 let g:ycm_server_keep_logfiles = 1
 let g:ycm_server_log_level = 'debug'
 "let g:ycm_autoclose_preview_window_after_insertion = 1
 " nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
 nnoremap <leader>g :YcmCompleter GoTo<CR>
+nnoremap <leader>G :YcmCompleter GoToDeclaration<CR>
+nnoremap <leader>r :YcmCompleter GoToReferences<CR>
 
 Plug 'scrooloose/syntastic'
 let g:syntastic_ignore_files=[".*\.tex$"]
 " let g:syntastic_python_checkers=['pyflakes']
 let g:syntastic_python_checkers=['flake8']
+" E501 -> line too long; E225 -> no white spaces between operation
+let g:syntastic_python_flake8_args='--ignore=E501,E225,W391,E123'
 
 " engine
 Plug 'SirVer/ultisnips'
@@ -230,6 +240,8 @@ let g:user_emmet_install_global = 0
 autocmd FileType html,css EmmetInstall
 autocmd FileType html,css,js :set shiftwidth=2
 
+Plug 'fatih/vim-go'
+
 
 " ============================================================
 " syntax files
@@ -247,7 +259,6 @@ Plug 'mitsuhiko/vim-python-combined'
 " python syntax file settings
 let python_highlight_all = 1
 let python_folding = 1
-autocmd FileType python nmap <F5> :!python %<CR>
 
 Plug 'mitsuhiko/vim-jinja'
 let g:htmljinja_disable_detection=1
@@ -293,7 +304,7 @@ if has("gui_running")
 
     colorscheme fruity
     if has("mac")
-        set guifont=Monaco:h15
+        set guifont=Monaco:h14
         set fuoptions=maxvert,maxhorz
         " does not work properly on os x
         " au GUIEnter * set fullscreen
@@ -353,7 +364,7 @@ set cursorline
 " set cursorcolumn
 
 set foldmethod=syntax
-set foldlevel=99
+set foldlevel=1
 " ignore number format(0x9 will not be treat as hex, nor do the 07 as octal
 "set nrformats=
 "set pastetoggle=<f5>
@@ -416,7 +427,16 @@ autocmd BufReadPost *
     \ endif
 
 
+"================================================================
+" file type related auto runner, use F5 to run the current file
+"================================================================
+autocmd FileType python nmap <F5> :!python %<CR>
+autocmd FileType go nmap <F5> :GoRun %<CR>
+
+
 " json formater
 " command! FormatJson :%!python -m json.tool
 " Format Json String with unicode support
 command! FormatJson :%!python -c "import json,sys,codecs; json.dump(json.load(codecs.getreader('utf8')(sys.stdin)), codecs.getwriter('utf8')(sys.stdout), sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False)"
+" format python code using yapf, config file is ~/.style.yapf
+command! FormatPython :%!yapf

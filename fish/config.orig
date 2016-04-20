@@ -1,0 +1,38 @@
+# Path to your oh-my-fish.
+set fish_path $HOME/.oh-my-fish
+
+set fish_plugins brew git balias theme percol python autojump z
+# some plugins
+# peco
+
+# Theme
+set fish_theme zish
+
+set -x LANG en_US.UTF-8
+set -x LANGUAGE en_US.UTF-8
+set -x LC_TYPE en_US.UTF-8
+set -x LC_ALL en_US.UTF-8
+
+# Which plugins would you like to load? (plugins can be found in ~/.oh-my-fish/plugins/*)
+# Custom plugins may be added to ~/.oh-my-fish/custom/plugins/
+# Example format: set fish_plugins autojump bundler
+
+# Path to your custom folder (default path is $FISH/custom)
+#set fish_custom $HOME/dotfiles/oh-my-fish
+function fish_user_key_bindings
+  bind \cr percol_select_history
+end
+
+# Load oh-my-fish configuration.
+. $fish_path/oh-my-fish.fish
+
+# personal alias
+# . $HOME/.config/.alias.fish
+
+. /usr/local/etc/autojump.fish
+
+set -x EDITOR vim
+# python virtualenv wrapper(virtualfish settings
+. $HOME/.config/virtualfish/virtual.fish
+# related plugins
+. $HOME/.config/virtualfish/projects.fish

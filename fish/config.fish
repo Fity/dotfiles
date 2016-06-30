@@ -13,6 +13,9 @@ set -Ux LSCOLORS gxfxbEaEBxxEhEhBaDaCaD
 # local bin (located at $HOME/bin)
 set -gx PATH $PATH $HOME/bin
 
+# used by homebrew
+set -x HOMEBREW_GITHUB_API_TOKEN 6bf829d92e147c25f4eb258b074a8f6a318bbd9f
+
 # source the autojump script
 source /usr/local/etc/autojump.fish
 
@@ -32,12 +35,9 @@ function fish_user_key_bindings
   bind \cr percol_select_history
 end
 
-# autoload boot2docker vars
-if boot2docker status | grep 'running'
-    for opt in (boot2docker shellinit)
-        eval $opt
-    end
-    set -x TSUBAKI '/Users/yangdf/repos/tsubaki'
+# autoload docker-machine vars
+if docker-machine status | ag 'running'
+    eval (docker-machine env)
 end
 
 # autoenv support
@@ -49,3 +49,8 @@ alias pg.stop='pg_ctl -D /usr/local/var/postgres stop -s -m fast'
 alias vim='env PYTHONPATH=./ vim'
 alias mvim='env PYTHONPATH=./ mvim'
 alias e='env PYTHONPATH=./ vim'
+
+# source eleme related config
+if test -e "$FISH_PATH/eleme/config.fish"
+    source $FISH_PATH/eleme/config.fish
+end

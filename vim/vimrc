@@ -149,33 +149,33 @@ Plug 'ntpeters/vim-better-whitespace'
 " let g:better_whitespace_filetypes_blacklist=['mkd', 'tex']
 " autocmd BufWritePre <buffer> StripWhitespace
 autocmd FileType python autocmd BufWritePre <buffer> StripWhitespace
-Plug 'kien/rainbow_parentheses.vim'
-" Better Rainbow Parentheses configurations
-let g:rbpt_colorpairs = [
-    \ ['brown',       'RoyalBlue3'],
-    \ ['Darkblue',    'SeaGreen3'],
-    \ ['darkgray',    'DarkOrchid3'],
-    \ ['darkgreen',   'firebrick3'],
-    \ ['darkcyan',    'RoyalBlue3'],
-    \ ['darkred',     'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['brown',       'firebrick3'],
-    \ ['gray',        'RoyalBlue3'],
-    \ ['black',       'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['Darkblue',    'firebrick3'],
-    \ ['darkgreen',   'RoyalBlue3'],
-    \ ['darkcyan',    'SeaGreen3'],
-    \ ['darkred',     'DarkOrchid3'],
-    \ ['red',         'firebrick3'],
-    \ ]
-let g:rbpt_max = 16
-let g:rbpt_loadcmd_toggle = 0
-augroup rainbow_group
-    autocmd VimEnter * RainbowParenthesesToggle
-    autocmd Syntax * RainbowParenthesesLoadRound
-    autocmd Syntax * RainbowParenthesesLoadSquare
-augroup end
+" Plug 'kien/rainbow_parentheses.vim'
+" " Better Rainbow Parentheses configurations
+" let g:rbpt_colorpairs = [
+    " \ ['brown',       'RoyalBlue3'],
+    " \ ['Darkblue',    'SeaGreen3'],
+    " \ ['darkgray',    'DarkOrchid3'],
+    " \ ['darkgreen',   'firebrick3'],
+    " \ ['darkcyan',    'RoyalBlue3'],
+    " \ ['darkred',     'SeaGreen3'],
+    " \ ['darkmagenta', 'DarkOrchid3'],
+    " \ ['brown',       'firebrick3'],
+    " \ ['gray',        'RoyalBlue3'],
+    " \ ['black',       'SeaGreen3'],
+    " \ ['darkmagenta', 'DarkOrchid3'],
+    " \ ['Darkblue',    'firebrick3'],
+    " \ ['darkgreen',   'RoyalBlue3'],
+    " \ ['darkcyan',    'SeaGreen3'],
+    " \ ['darkred',     'DarkOrchid3'],
+    " \ ['red',         'firebrick3'],
+    " \ ]
+" let g:rbpt_max = 16
+" let g:rbpt_loadcmd_toggle = 0
+" augroup rainbow_group
+    " autocmd VimEnter * RainbowParenthesesToggle
+    " autocmd Syntax * RainbowParenthesesLoadRound
+    " autocmd Syntax * RainbowParenthesesLoadSquare
+" augroup end
 
 Plug 'tpope/vim-fugitive'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer' }
@@ -231,6 +231,10 @@ function! MyPydoc(query)
 endfunction
 nnoremap <localleader>d :call MyPydoc(expand("<cword>")) <CR>
 vnoremap <localleader>d :call MyPydoc(expand("<cword>")) <CR>
+
+" Python arg style parse
+Plug 'FooSoft/vim-argwrap', {'for': 'python'}
+nnoremap <silent> <leader>a :ArgWrap<CR>
 
 " web frontend related
 Plug 'mattn/emmet-vim'

@@ -24,6 +24,9 @@ set -x GOROOT /usr/local/go
 set -x GOPATH $HOME/repos/go
 set -x PATH $PATH $GOPATH/bin
 
+# emacs cask settings
+set -x PATH $PATH $HOME/.cask/bin
+
 
 # python virtualenv wrapper(virtualfish settings
 # . $HOME/.config/virtualfish/virtual.fish

@@ -35,7 +35,10 @@ values."
      ;; spell-checking
      syntax-checking
      version-control
+     git
+     auto-completion
      ;; programing languages
+     markdown
      python
      go
      )
@@ -77,6 +80,7 @@ values."
    ;; uses emacs key bindings for vim's insert mode, but otherwise leaves evil
    ;; unchanged. (default 'vim)
    dotspacemacs-editing-style 'vim
+   ;; dotspacemacs-editing-style 'emacs
    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
    ;; Specify the startup banner. Default value is `official', it displays
@@ -252,11 +256,31 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  ;; personal general settings
   (global-linum-mode t)
   (indent-guide-global-mode 1)
   (define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
   (global-fci-mode 1)
   ; (turn-on-fci-mode)
+
+  ;; turn off auto-save feature, no #filename# files any more
+  ;; (setq auto-save-default nil)
+
+  ;; personal snippet directory
+  (setq auto-completion-private-snippets-directory
+        "~/.emacs.d/private/snippets/yasnippet-snippets")
+  ;; show snippet in popup
+  (setq-default dotspacemacs-configuration-layers
+                '((auto-completion :variables
+                                   auto-completion-enable-snippets-in-popup t)))
+  ;; show docstring tooltips
+  (setq-default dotspacemacs-configuration-layers
+                '((auto-completion :variables
+                                   auto-completion-enable-help-tooltip t)))
+
+  ;; personal programming settings
+  (setq-default dotspacemacs-configuration-layers '(
+    (python :variables python-enable-yapf-format-on-save t)))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will

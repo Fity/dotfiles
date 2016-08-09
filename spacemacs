@@ -26,6 +26,8 @@ values."
      ;; auto-completion
      ;; better-defaults
      emacs-lisp
+     (colors :variables
+             colors-enable-nyan-cat-progress-bar t)
      ;; git
      markdown
      org

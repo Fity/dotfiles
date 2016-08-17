@@ -51,7 +51,6 @@ alias pg.start='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/ser
 alias pg.stop='pg_ctl -D /usr/local/var/postgres stop -s -m fast'
 alias vim='env PYTHONPATH=./ vim'
 alias mvim='env PYTHONPATH=./ mvim'
-alias e='env PYTHONPATH=./ vim'
 
 # source eleme related config
 if test -e "$FISH_PATH/eleme/config.fish"

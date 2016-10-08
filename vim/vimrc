@@ -178,7 +178,7 @@ autocmd FileType python autocmd BufWritePre <buffer> StripWhitespace
 " augroup end
 
 Plug 'tpope/vim-fugitive'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer' }
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --tern-completer' }
 let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
 let g:ycm_key_invoke_completion = ''
 let g:ycm_complete_in_comments = 1

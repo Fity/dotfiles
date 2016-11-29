@@ -252,6 +252,7 @@ Plug 'fatih/vim-go'
 " syntax files
 " Plug 'mitsuhiko/vim-rst'
 Plug 'solarnz/thrift.vim'
+Plug 'docker/docker', {'rtp': '/contrib/syntax/vim/'}
 " Plug 'tpope/vim-markdown'
 Plug 'jtratner/vim-flavored-markdown'
 let vim_markdown_initial_foldlevel=99

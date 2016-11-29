@@ -38,11 +38,6 @@ function fish_user_key_bindings
   bind \cr percol_select_history
 end
 
-# autoload docker-machine vars
-if docker-machine status | ag 'running'
-    eval (docker-machine env)
-end
-
 # autoenv support
 source ~/.config/fish/autoenv.fish
 
@@ -50,9 +45,12 @@ source ~/.config/fish/autoenv.fish
 alias pg.start='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start'
 alias pg.stop='pg_ctl -D /usr/local/var/postgres stop -s -m fast'
 alias vim='env PYTHONPATH=./ vim'
-alias mvim='env PYTHONPATH=./ mvim'
+# alias mvim='env PYTHONPATH=./ mvim'
 
 # source eleme related config
 if test -e "$FISH_PATH/eleme/config.fish"
     source $FISH_PATH/eleme/config.fish
 end
+
+# used by thefuck
+eval (thefuck --alias | tr '\n' ';')

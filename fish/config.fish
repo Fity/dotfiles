@@ -54,3 +54,7 @@ end
 
 # used by thefuck
 eval (thefuck --alias | tr '\n' ';')
+
+# start ssh-agent
+source $HOME/.config/fish/ssh_agent_start.fish
+start_agent
